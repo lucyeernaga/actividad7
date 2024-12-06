@@ -85,7 +85,7 @@
             }
         }
 
-        
+
         console.log("text body: ",document.body.innerText);
         // la funcion jugar recibe un parametro, siempre que nos refiramos a la palabra "usuario" me esta redirigiendo al texto piedra/pape/tijera.
         function jugar(usuario){
@@ -165,19 +165,33 @@
             return opciones[numero];
         }
 
+        //
+        //
         function AIvsAI(){
-            const opciones=['piedra','papel','tijera'];
+            const opciones=['piedra','papel','tijera']; // es una lista de opciones que puedo tirar
 
-            setInterval(function(){
+
+            const tomi = function() {
+            //     const numero=Math.floor(Math.random()*opciones.length);
+            //     const usuario=opciones[numero];
+            //     jugar(usuario);
+            // }
+
+            // setInterval( tomi,  100 );
+
+            setInterval(function(){  // setInterval es un espacio
                 const numero=Math.floor(Math.random()*opciones.length);
                 const usuario=opciones[numero];
                 jugar(usuario);
-            },100);
+            },100); // estos 100 es el tiempo a lo que va la estadistica 100milisegundos
+            // opciones.length obtenemos los 3 valores(p,p,t)
             // const numero=Math.floor(Math.random()*3);
             // usuario=opciones[numero];
             // jugar(usuario);
         }
 
+        // funcion que calcula % de partidas ganadas y perdidas
+        // y las grafica usando 2 tips rojo y azul
         function graficar(){
             const total=objScore.ganadas+objScore.perdidas;// +objScore.empatadas;
             const porcentajeGanadas=(objScore.ganadas/total)*100;
