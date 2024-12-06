@@ -8,12 +8,13 @@
 <body>
 
     
-    <!-- Tengo 3 bototes, y los 3 llaman a una mism afunción que se llama jugar (esta función jugar tiene 1 solo parámetro don de puede recibir tijera, papel o piedra) -->
+    <!-- Tengo 3 bototes, y los 3 llaman a una mism afunción que se llama jugar (esta función jugar tiene 1 solo parámetro son de puede recibir tijera, papel o piedra) -->
     <button onClick="jugar('piedra')">Piedra ✊</button>
     <button onClick="jugar('papel')">Papel ✋</button>
     <button onClick="jugar('tijera')">Tijera ✌</button>
 
-    <button onClick="
+    <!-- .ganadas, .perdidas... son características (no funciones)-->
+    <button onClick="  
             objScore.ganadas=0;
             objScore.perdidas=0;
             objScore.empatadas=0;
@@ -28,24 +29,29 @@
             showScore();
         ">Reset
     </button>
-    <button onClick="AIvsAI()">AutoPlay</button>
+    <!-- Este boton hace que el ordenata juegue contra si mismo (ia vs ia) -->
+    <button onClick="AIvsAI()" title="Dejar que el ordenador juegue contra si mismo" >AutoPlay</button>
 
+    <!-- Esta caja muestra los resultados en pantalla -->
     <div class="txtResultado" style="border:1px dashed black">
 
     </div>
     <hr>
+    <!-- Estas son estdísticas, la cantidad de ganadas, perdidas o empatadas -->
     <p>Ganadas: <span id="ganadas">0</span></p>
     <p>Perdidas: <span id="perdidas">0</span></p>
     <p>Empatadas: <span id="empatadas">0</span></p>
 
     Gráfica:
-    <style>
+    <!-- Este es el gráfico de color azul y rojo que aparece en pantalla -->
+    <style> 
         div>div{
             color: white;
             width: 0%;
             transition: width 1s;
         }
     </style>
+    <!-- esta es una caja contendora con un ancho específico con dos cajas + dentro de si misma (para la parte roja y la parte azul) -->
     <div style="width:100%; background: gray; display:flex; text-align:center;">
         <div style="background:red;">Ganadas</div>
         <div style="background:blue;">Perdidas</div>
@@ -57,7 +63,7 @@
     </div>
 
     <script>
-        // estas 3 const son variables
+        // estas 3 const son variables (obetenemos textos algunos x id y otros x clases)
         const txtGanadas=document.getElementById("ganadas");
         const txtPerdidas=document.getElementById("perdidas");
         const txtEmpatadas=document.getElementById("empatadas");
@@ -65,7 +71,7 @@
         const txtResultado=document.querySelector(".txtResultado");
         const txtStats=document.querySelector(".txtStats");
 
-        const objScore={
+        const objScore={  // esto es un objeto que tiene muchas propiedades
             ganadas:0,
             perdidas:0,
             empatadas:0,
@@ -79,14 +85,15 @@
             }
         }
 
+        
         console.log("text body: ",document.body.innerText);
-
+        // la funcion jugar recibe un parametro, siempre que nos refiramos a la palabra "usuario" me esta redirigiendo al texto piedra/pape/tijera.
         function jugar(usuario){
             const jugadorAI=elegirJugadorAI(); // devuelve piedra, papel o tijera
 
             let resultado="";
 
-            if(jugadorAI == usuario){
+            if(jugadorAI == usuario){  // cada vez que lea un "usuario" es como decir: piedra, papel o tijera
                 console.log('Empate');
                 resultado='Empate';
 
