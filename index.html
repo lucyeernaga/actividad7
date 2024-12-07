@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Piedra Papel Tijera</title>
 </head>
+
 <body>
 
-    
+
     <!-- Tengo 3 bototes, y los 3 llaman a una mism afunción que se llama jugar (esta función jugar tiene 1 solo parámetro son de puede recibir tijera, papel o piedra) -->
-    <button onClick="jugar('piedra')">Piedra ✊</button>
-    <button onClick="jugar('papel')">Papel ✋</button>
-    <button onClick="jugar('tijera')">Tijera ✌</button>
+    <button id="btnPiedra">Piedra ✊</button>
+    <button id="btnPapel">Papel ✋</button>
+    <button id="btnTijera">Tijera ✌</button>
 
     <!-- .ganadas, .perdidas... son características (no funciones)-->
     <button onClick="  
@@ -30,7 +32,7 @@
         ">Reset
     </button>
     <!-- Este boton hace que el ordenata juegue contra si mismo (ia vs ia) -->
-    <button onClick="AIvsAI()" title="Dejar que el ordenador juegue contra si mismo" >AutoPlay</button>
+    <button onClick="AIvsAI()" title="Dejar que el ordenador juegue contra si mismo">AutoPlay</button>
 
     <!-- Esta caja muestra los resultados en pantalla -->
     <div class="txtResultado" style="border:1px dashed black">
@@ -44,8 +46,8 @@
 
     Gráfica:
     <!-- Este es el gráfico de color azul y rojo que aparece en pantalla -->
-    <style> 
-        div>div{
+    <style>
+        div>div {
             color: white;
             width: 0%;
             transition: width 1s;
@@ -64,150 +66,148 @@
 
     <script>
         // estas 3 const son variables (obetenemos textos algunos x id y otros x clases)
-        const txtGanadas=document.getElementById("ganadas");
-        const txtPerdidas=document.getElementById("perdidas");
-        const txtEmpatadas=document.getElementById("empatadas");
+        const txtGanadas = document.getElementById("ganadas");
+        const txtPerdidas = document.getElementById("perdidas");
+        const txtEmpatadas = document.getElementById("empatadas");
 
-        const txtResultado=document.querySelector(".txtResultado");
-        const txtStats=document.querySelector(".txtStats");
+        const txtResultado = document.querySelector(".txtResultado");
+        const txtStats = document.querySelector(".txtStats");
 
-        const objScore={  // esto es un objeto que tiene muchas propiedades
-            ganadas:0,
-            perdidas:0,
-            empatadas:0,
-            stats:{
-                ai_piedra:0,
-                ai_papel:0,
-                ai_tijera:0,
-                user_piedra:0,
-                user_papel:0,
-                user_tijera:0
+
+        // Botones de piedra, papel, tijera
+        const btnPiedra = document.querySelector("#btnPiedra");
+        const btnPapel = document.querySelector("#btnPapel");
+        const btnTijera = document.querySelector("#btnTijera");
+
+        btnPiedra.addEventListener("click", () => { jugar("piedra") });
+        btnPapel.addEventListener("click", () => { jugar("papel") });
+        btnTijera.addEventListener("click", () => { jugar("tijera") });
+
+        const opciones = ['piedra', 'papel', 'tijera'];
+
+        const objScore = {  // esto es un objeto que tiene muchas propiedades
+            ganadas: 0,
+            perdidas: 0,
+            empatadas: 0,
+            stats: {
+                ai_piedra: 0,
+                ai_papel: 0,
+                ai_tijera: 0,
+                user_piedra: 0,
+                user_papel: 0,
+                user_tijera: 0
             }
         }
 
 
-        console.log("text body: ",document.body.innerText);
-        // la funcion jugar recibe un parametro, siempre que nos refiramos a la palabra "usuario" me esta redirigiendo al texto piedra/pape/tijera.
-        function jugar(usuario){
-            const jugadorAI=elegirJugadorAI(); // devuelve piedra, papel o tijera
+        console.log("text body: ", document.body.innerText);
+        /** 
+         * la funcion jugar recibe un parametro, siempre que nos refiramos a la palabra "usuario" me esta redirigiendo al texto piedra/papel/tijera.
+         * jugadorAI también vale (piedra, papel o tijera)
+         * cada vez que lea un "usuario" es como decir: piedra, papel o tijera
+         * */
+        const jugar = usuario => {
+            const jugadorAI = elegirJugadorAI(); // devuelve piedra, papel o tijera
 
-            let resultado="";
+            let resultado ="";
 
-            if(jugadorAI == usuario){  // cada vez que lea un "usuario" es como decir: piedra, papel o tijera
-                console.log('Empate');
-                resultado='Empate';
+            if (jugadorAI == usuario){      resultado = 'Empate';} 
+            else if (usuario == 'piedra') { resultado = (jugadorAI=='papel') ? "Perdiste": "Ganaste";} 
+            else if (usuario == 'papel')  { resultado = (jugadorAI=='tijera') ? "Perdiste": "Ganaste";} 
+            else if (usuario == 'tijera') { resultado = (jugadorAI=='piedra') ? "Perdiste": "Ganaste";}
 
-            } else if(usuario=='piedra'){
-
-                if(jugadorAI=='papel'){
-                    console.log('Perdiste');
-                    resultado='Perdiste';
-                }else{
-                    console.log('Ganaste');
-                    resultado='Ganaste';
-                }
-
-            } else if(usuario=='papel'){
-
-                if(jugadorAI=='tijera'){
-                    console.log('Perdiste');
-                    resultado='Perdiste';
-                }else{
-                    console.log('Ganaste');
-                    resultado='Ganaste';
-                }
-
-            } else if(usuario=='tijera'){
-
-                if(jugadorAI=='piedra'){
-                    console.log('Perdiste');
-                    resultado='Perdiste';
-                }else{
-                    console.log('Ganaste');
-                    resultado='Ganaste';
-                }
-            }
+            console.log(resultado);
 
 
             // Stats de los Jugadores
-            if(usuario=='piedra'){ objScore.stats.user_piedra++; }
-            if(usuario=='papel'){ objScore.stats.user_papel++; }
-            if(usuario=='tijera'){ objScore.stats.user_tijera++; }
-            if(jugadorAI=='piedra'){ objScore.stats.ai_piedra++; }
-            if(jugadorAI=='papel'){ objScore.stats.ai_papel++; }
-            if(jugadorAI=='tijera'){ objScore.stats.ai_tijera++; }
+            if (usuario == 'piedra') { objScore.stats.user_piedra++; }
+            if (usuario == 'papel') { objScore.stats.user_papel++; }
+            if (usuario == 'tijera') { objScore.stats.user_tijera++; }
+            if (jugadorAI == 'piedra') { objScore.stats.ai_piedra++; }
+            if (jugadorAI == 'papel') { objScore.stats.ai_papel++; }
+            if (jugadorAI == 'tijera') { objScore.stats.ai_tijera++; }
 
             // Score
-            if(resultado=='Empate') { objScore.empatadas++; }
-            if(resultado=='Perdiste') { objScore.perdidas++; }
-            if(resultado=='Ganaste') { objScore.ganadas++; }
+            if (resultado == 'Empate') { objScore.empatadas++; }
+            if (resultado == 'Perdiste') { objScore.perdidas++; }
+            if (resultado == 'Ganaste') { objScore.ganadas++; }
 
-            txtResultado.innerHTML=`<h1>${resultado}</h1>Tu has tirado <b>${usuario.toUpperCase()}</b> y la AI ha tirado <b>${jugadorAI.toUpperCase()}</b>.`;
+            txtResultado.innerHTML =`<h1>${resultado}</h1>
+                                    Tu has tirado <b>${usuario.toUpperCase()}</b> 
+                                    <br>
+                                    y la AI ha tirado <b>${jugadorAI.toUpperCase()}</b>.`;
 
             showScore();
         }
 
-        function showScore(){
-
-            txtGanadas.innerHTML=objScore.ganadas;
-            txtPerdidas.innerHTML=objScore.perdidas;
-            txtEmpatadas.innerHTML=objScore.empatadas;
-
-            
-            txtStats.innerHTML=`<p><h3>AI:</h3> ✊x${objScore.stats.ai_piedra} ✋x${objScore.stats.ai_papel} ✌x${objScore.stats.ai_tijera}</p>
-                                <p><h3>Usuario:</h3> ✊x${objScore.stats.user_piedra} ✋x${objScore.stats.user_papel} ✌x${objScore.stats.user_tijera}</p>`;
-            graficar();
-        }
-
-        function elegirJugadorAI(){
-            const opciones=['piedra','papel','tijera'];
-            const numero=Math.floor(Math.random()*opciones.length);
+        /**
+         * Esta funcion elige una opción al azar
+         * @return nos devuelve un {string} - ej: piedra, papel o tijera
+         * (no es una lista, es: de la lista coje un valor, y ese valor es un string)
+         * */
+        const elegirJugadorAI = ()=> {
+            // const opciones=['piedra','papel','tijera'];
+            const numero = Math.floor(Math.random() * opciones.length);
             return opciones[numero];
         }
 
-        //
-        //
-        function AIvsAI(){
-            const opciones=['piedra','papel','tijera']; // es una lista de opciones que puedo tirar
+        /**
+        * Esta funcion obtiene un numero al azar entre 0 y 2
+        * Elige el valor al azar del jugador (piedra, papel, tijera)
+        * Realiza una partida cada décima de segundo
+        * */
+        const AIvsAI = ()=> {
+            // const opciones=['piedra','papel','tijera']; // es una lista de opciones que puedo tirar
 
-
-            const tomi = function() {
-            //     const numero=Math.floor(Math.random()*opciones.length);
-            //     const usuario=opciones[numero];
-            //     jugar(usuario);
-            // }
-
-            // setInterval( tomi,  100 );
-
-            setInterval(function(){  // setInterval es un espacio
-                const numero=Math.floor(Math.random()*opciones.length);
-                const usuario=opciones[numero];
+            // setInterval ejecuta una funcion cada x tiempo (en milisegundos)
+            setInterval(function () {
+                const numero = Math.floor(Math.random() * opciones.length); // 0, 1, 2
+                const usuario = opciones[numero];
                 jugar(usuario);
-            },100); // estos 100 es el tiempo a lo que va la estadistica 100milisegundos
+            }, 100);
+            // estos 100 es el tiempo a lo que va la estadistica 100milisegundos
             // opciones.length obtenemos los 3 valores(p,p,t)
             // const numero=Math.floor(Math.random()*3);
             // usuario=opciones[numero];
             // jugar(usuario);
         }
 
+        /**
+         * Imprimir en pantalla los valores, las estadísticas
+         * Llamar a gráfica()
+         * Dentro de los txt estamos guardando los datos o numeros
+         * */
+        const showScore = ()=> {
+
+            txtGanadas.innerHTML = objScore.ganadas;
+            txtPerdidas.innerHTML = objScore.perdidas;
+            txtEmpatadas.innerHTML = objScore.empatadas;
+
+
+            txtStats.innerHTML = `<p><h3>AI:</h3> ✊x${objScore.stats.ai_piedra} ✋x${objScore.stats.ai_papel} ✌x${objScore.stats.ai_tijera}</p>
+                    <p><h3>Usuario:</h3> ✊x${objScore.stats.user_piedra} ✋x${objScore.stats.user_papel} ✌x${objScore.stats.user_tijera}</p>`;
+            graficar();
+        }
+
         // funcion que calcula % de partidas ganadas y perdidas
         // y las grafica usando 2 tips rojo y azul
-        function graficar(){
-            const total=objScore.ganadas+objScore.perdidas;// +objScore.empatadas;
-            const porcentajeGanadas=(objScore.ganadas/total)*100;
-            const porcentajePerdidas=(objScore.perdidas/total)*100;
+        const graficar = ()=> {
+            const total = objScore.ganadas + objScore.perdidas;// +objScore.empatadas;
+            const porcentajeGanadas = (objScore.ganadas / total) * 100;
+            const porcentajePerdidas = (objScore.perdidas / total) * 100;
             //const porcentajeEmpatadas=(objScore.empatadas/total)*100;
 
-            const divGanadas=document.querySelector("div>div:nth-child(1)");
-            const divPerdidas=document.querySelector("div>div:nth-child(2)");
+            const divGanadas = document.querySelector("div>div:nth-child(1)");
+            const divPerdidas = document.querySelector("div>div:nth-child(2)");
 
-            divGanadas.innerHTML="Ganadas: "+Math.round(porcentajeGanadas)+"%";
-            divPerdidas.innerHTML="Perdidas: "+Math.round(porcentajePerdidas)+"%";
-            divGanadas.style.width=porcentajeGanadas+"%";
-            divPerdidas.style.width=porcentajePerdidas+"%";
+            divGanadas.innerHTML = "Ganadas: " + Math.round(porcentajeGanadas) + "%";
+            divPerdidas.innerHTML = "Perdidas: " + Math.round(porcentajePerdidas) + "%";
+            divGanadas.style.width = porcentajeGanadas + "%";
+            divPerdidas.style.width = porcentajePerdidas + "%";
         }
 
 
     </script>
 </body>
+
 </html>
